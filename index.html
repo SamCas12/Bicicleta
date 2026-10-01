@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rodar | Todo sobre bicicletas</title>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: #F2F5F7;
+    color: #14212B;
+    font-family: "Segoe UI", Verdana, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-weight: normal;
+    line-height: 1.1;
+    margin: 0 0 .5em;
+  }
+  a { color: #0E5A8A; }
+  a:focus, button:focus, input:focus { outline: 3px solid #F2C230; outline-offset: 2px; }
+
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+  /* Encabezado */
+  header { background: #14212B; color: #fff; }
+  header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding-top: 14px; padding-bottom: 14px; }
+  .logo { font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif; font-size: 26px; letter-spacing: 1px; color: #F2C230; text-decoration: none; }
+  nav a { color: #fff; text-decoration: none; margin-left: 20px; padding: 4px 0; border-bottom: 2px solid transparent; }
+  nav a:hover { border-bottom-color: #F2C230; }
+
+  /* Hero */
+  .hero { background: #14212B; color: #fff; padding: 40px 0 0; overflow: hidden; }
+  .hero .wrap { display: flex; flex-wrap: wrap; align-items: center; }
+  .hero-text { flex: 1 1 340px; padding-bottom: 40px; }
+  .hero h1 { font-size: 58px; margin-bottom: 16px; }
+  .hero p { max-width: 460px; color: #C9D6DF; margin: 0 0 24px; }
+  .btn {
+    display: inline-block; background: #F2C230; color: #14212B; text-decoration: none;
+    padding: 12px 24px; border: 0; font: inherit; font-weight: bold; cursor: pointer; border-radius: 3px;
+  }
+  .btn:hover { background: #FFD34D; }
+  .hero-art { flex: 1 1 420px; }
+  .hero-art svg { width: 100%; height: auto; display: block; }
+  .tire { fill: none; stroke: #F2F5F7; stroke-width: 7; }
+  .rim { fill: none; stroke: #6F8799; stroke-width: 2; }
+  .spokes line { stroke: #6F8799; stroke-width: 1.5; }
+  .frame { fill: none; stroke: #F2C230; stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+  .part { fill: none; stroke: #F2F5F7; stroke-width: 6; stroke-linecap: round; }
+  .wheel-a { transform-origin: 140px 200px; animation: giro 6s linear infinite; }
+  .wheel-b { transform-origin: 460px 200px; animation: giro 6s linear infinite; }
+  @keyframes giro { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .wheel-a, .wheel-b { animation: none; } }
+  .road { height: 10px; background: #F2C230; }
+
+  /* Secciones */
+  section { padding: 56px 0; }
+  section h2 { font-size: 38px; }
+  .lead { max-width: 620px; color: #3F5361; margin-bottom: 28px; }
+  .alt { background: #E4EAEE; }
+
+  /* Tipos */
+  .filters { margin-bottom: 24px; }
+  .filters button {
+    font: inherit; background: #fff; color: #14212B; border: 2px solid #14212B;
+    padding: 6px 16px; margin: 0 8px 8px 0; cursor: pointer; border-radius: 3px;
+  }
+  .filters button.on { background: #14212B; color: #fff; }
+  .cards { display: flex; flex-wrap: wrap; margin: 0 -10px; }
+  .card { flex: 1 1 280px; max-width: 100%; margin: 0 10px 20px; background: #fff; border-left: 8px solid #0E5A8A; padding: 20px 22px; }
+  .card h3 { font-size: 26px; }
+  .card dl { margin: 0; }
+  .card dt { font-weight: bold; float: left; clear: left; width: 80px; }
+  .card dd { margin: 0 0 4px 80px; }
+  .card.ruta { border-left-color: #0E5A8A; }
+  .card.montana { border-left-color: #2E7D4F; }
+  .card.urbana { border-left-color: #F2C230; }
+  .card.electrica { border-left-color: #C2412D; }
+
+  /* Partes */
+  .parts { display: flex; flex-wrap: wrap; margin: 0 -10px; }
+  .parts details { flex: 1 1 300px; margin: 0 10px 14px; background: #fff; padding: 14px 18px; }
+  .parts summary { cursor: pointer; font-weight: bold; }
+  .parts p { margin: 10px 0 0; color: #3F5361; }
+
+  /* Beneficios */
+  .benefits { display: flex; flex-wrap: wrap; margin: 0 -10px; }
+  .benefit { flex: 1 1 220px; margin: 0 10px 20px; padding-top: 14px; border-top: 6px solid #14212B; }
+  .benefit h3 { font-size: 24px; }
+  .benefit p { margin: 0; color: #3F5361; }
+
+  /* Mantenimiento */
+  .check { max-width: 640px; list-style: none; margin: 0 0 16px; padding: 0; }
+  .check li { background: #fff; margin-bottom: 8px; padding: 12px 16px; }
+  .check label { display: block; cursor: pointer; }
+  .check input { margin-right: 10px; width: 18px; height: 18px; vertical-align: middle; }
+  .check input:checked + span { text-decoration: line-through; color: #6F8799; }
+  #progreso { font-weight: bold; }
+
+  footer { background: #14212B; color: #C9D6DF; padding: 28px 0; font-size: 15px; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 42px; }
+    nav a { margin: 0 14px 0 0; }
+    header .wrap { display: block; }
+    section h2 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#inicio">RODAR</a>
+    <nav>
+      <a href="#tipos">Tipos</a>
+      <a href="#partes">Partes</a>
+      <a href="#beneficios">Beneficios</a>
+      <a href="#mantenimiento">Mantenimiento</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero" id="inicio">
+  <div class="wrap">
+    <div class="hero-text">
+      <h1>Dos ruedas, cero gasolina.</h1>
+      <p>Una guía rápida para entender cómo está hecha una bicicleta, qué tipos existen y cómo cuidar la tuya.</p>
+      <a class="btn" href="#tipos">Elegir mi bicicleta</a>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 600 300" role="img" aria-label="Ilustración de una bicicleta de ruta">
+        <g class="wheel-a">
+          <circle class="tire" cx="140" cy="200" r="80"/>
+          <circle class="rim" cx="140" cy="200" r="70"/>
+          <g class="spokes">
+            <line x1="70" y1="200" x2="210" y2="200"/>
+            <line x1="140" y1="130" x2="140" y2="270"/>
+            <line x1="70" y1="200" x2="210" y2="200" transform="rotate(45 140 200)"/>
+            <line x1="70" y1="200" x2="210" y2="200" transform="rotate(135 140 200)"/>
+          </g>
+        </g>
+        <g class="wheel-b">
+          <circle class="tire" cx="460" cy="200" r="80"/>
+          <circle class="rim" cx="460" cy="200" r="70"/>
+          <g class="spokes">
+            <line x1="390" y1="200" x2="530" y2="200"/>
+            <line x1="460" y1="130" x2="460" y2="270"/>
+            <line x1="390" y1="200" x2="530" y2="200" transform="rotate(45 460 200)"/>
+            <line x1="390" y1="200" x2="530" y2="200" transform="rotate(135 460 200)"/>
+          </g>
+        </g>
+        <!-- cuadro -->
+        <polyline class="frame" points="140,200 250,115 400,115 280,205 140,200"/>
+        <line class="frame" x1="250" y1="115" x2="280" y2="205"/>
+        <line class="frame" x1="400" y1="115" x2="420" y2="150"/>
+        <line class="frame" x1="420" y1="150" x2="460" y2="200"/>
+        <!-- partes -->
+        <line class="part" x1="250" y1="115" x2="240" y2="88"/>
+        <line class="part" x1="220" y1="86" x2="262" y2="86"/>
+        <polyline class="part" points="400,115 398,92 425,88"/>
+        <circle class="part" cx="280" cy="205" r="20"/>
+        <line class="part" x1="280" y1="205" x2="300" y2="235"/>
+      </svg>
+    </div>
+  </div>
+  <div class="road"></div>
+</div>
+
+<section id="tipos">
+  <div class="wrap">
+    <h2>Tipos de bicicleta</h2>
+    <p class="lead">Cada modelo está pensado para un terreno y un uso distinto. Filtra por tipo para ver sus características.</p>
+
+    <div class="filters" id="filtros">
+      <button type="button" class="on" data-tipo="todas">Todas</button>
+      <button type="button" data-tipo="ruta">Ruta</button>
+      <button type="button" data-tipo="montana">Montaña</button>
+      <button type="button" data-tipo="urbana">Urbana</button>
+      <button type="button" data-tipo="electrica">Eléctrica</button>
+    </div>
+
+    <div class="cards" id="tarjetas">
+      <article class="card ruta" data-tipo="ruta">
+        <h3>Ruta</h3>
+        <dl>
+          <dt>Terreno</dt><dd>Asfalto</dd>
+          <dt>Peso</dt><dd>Ligera, 7 a 10 kg</dd>
+          <dt>Ideal para</dt><dd>Velocidad y distancias largas</dd>
+        </dl>
+      </article>
+      <article class="card montana" data-tipo="montana">
+        <h3>Montaña</h3>
+        <dl>
+          <dt>Terreno</dt><dd>Tierra, piedras y senderos</dd>
+          <dt>Peso</dt><dd>Media, con suspensión</dd>
+          <dt>Ideal para</dt><dd>Subidas, bajadas y aventura</dd>
+        </dl>
+      </article>
+      <article class="card urbana" data-tipo="urbana">
+        <h3>Urbana</h3>
+        <dl>
+          <dt>Terreno</dt><dd>Calle y ciclovía</dd>
+          <dt>Peso</dt><dd>Media, postura cómoda</dd>
+          <dt>Ideal para</dt><dd>Ir al trabajo o a la escuela</dd>
+        </dl>
+      </article>
+      <article class="card electrica" data-tipo="electrica">
+        <h3>Eléctrica</h3>
+        <dl>
+          <dt>Terreno</dt><dd>Ciudad o montaña</dd>
+          <dt>Peso</dt><dd>Pesada por la batería</dd>
+          <dt>Ideal para</dt><dd>Pendientes y trayectos largos sin cansarse</dd>
+        </dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="partes" class="alt">
+  <div class="wrap">
+    <h2>Partes principales</h2>
+    <p class="lead">Toca una parte para ver qué hace.</p>
+    <div class="parts">
+      <details><summary>Cuadro</summary><p>Es la estructura que une todas las piezas. Puede ser de aluminio, acero o carbono.</p></details>
+      <details><summary>Horquilla</summary><p>Sostiene la rueda delantera y permite girar el manubrio. En montaña suele incluir suspensión.</p></details>
+      <details><summary>Manubrio</summary><p>Sirve para dirigir la bicicleta. También lleva las manijas de freno y los cambios.</p></details>
+      <details><summary>Sillín y tija</summary><p>La tija sube o baja el sillín para ajustar la altura a la longitud de tus piernas.</p></details>
+      <details><summary>Transmisión</summary><p>Pedales, plato, cadena y piñones. Convierten el movimiento de tus piernas en avance.</p></details>
+      <details><summary>Frenos</summary><p>De zapata (rim) o de disco. Los de disco frenan mejor con lluvia y barro.</p></details>
+      <details><summary>Ruedas y llantas</summary><p>Las llantas anchas dan agarre en tierra. Las delgadas ruedan más rápido en asfalto.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="beneficios">
+  <div class="wrap">
+    <h2>Por qué andar en bici</h2>
+    <div class="benefits">
+      <div class="benefit"><h3>Salud</h3><p>Fortalece el corazón y las piernas con poco impacto en las articulaciones.</p></div>
+      <div class="benefit"><h3>Ahorro</h3><p>No gasta gasolina y su mantenimiento cuesta mucho menos que el de un auto.</p></div>
+      <div class="benefit"><h3>Ambiente</h3><p>No emite gases y ocupa poco espacio en la calle.</p></div>
+      <div class="benefit"><h3>Tiempo</h3><p>En trayectos cortos de ciudad, muchas veces llegas antes que en auto.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="mantenimiento" class="alt">
+  <div class="wrap">
+    <h2>Revisión antes de salir</h2>
+    <p class="lead">Marca cada punto antes de rodar.</p>
+    <ul class="check" id="lista">
+      <li><label><input type="checkbox"><span>Las llantas tienen la presión correcta</span></label></li>
+      <li><label><input type="checkbox"><span>Los frenos responden al apretar las manijas</span></label></li>
+      <li><label><input type="checkbox"><span>La cadena está limpia y lubricada</span></label></li>
+      <li><label><input type="checkbox"><span>El sillín y el manubrio están firmes</span></label></li>
+      <li><label><input type="checkbox"><span>Las luces y reflejantes funcionan</span></label></li>
+      <li><label><input type="checkbox"><span>Llevo casco</span></label></li>
+    </ul>
+    <p id="progreso">0 de 6 revisiones completas</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Rodar &mdash; Proyecto de laboratorio servido con Apache (XAMPP).</div>
+</footer>
+
+<script>
+  // Filtro de tipos de bicicleta
+  var botones = document.querySelectorAll('#filtros button');
+  var tarjetas = document.querySelectorAll('#tarjetas .card');
+
+  function filtrar(tipo) {
+    var i;
+    for (i = 0; i < tarjetas.length; i++) {
+      var visible = (tipo === 'todas' || tarjetas[i].getAttribute('data-tipo') === tipo);
+      tarjetas[i].style.display = visible ? '' : 'none';
+    }
+    for (i = 0; i < botones.length; i++) {
+      var activo = botones[i].getAttribute('data-tipo') === tipo;
+      botones[i].className = activo ? 'on' : '';
+    }
+  }
+
+  for (var b = 0; b < botones.length; b++) {
+    botones[b].onclick = function () {
+      filtrar(this.getAttribute('data-tipo'));
+    };
+  }
+
+  // Contador de la lista de revisión
+  var casillas = document.querySelectorAll('#lista input');
+  var progreso = document.getElementById('progreso');
+
+  function contar() {
+    var hechas = 0;
+    for (var i = 0; i < casillas.length; i++) {
+      if (casillas[i].checked) { hechas++; }
+    }
+    progreso.textContent = hechas === casillas.length
+      ? 'Todo listo, ¡a rodar!'
+      : hechas + ' de ' + casillas.length + ' revisiones completas';
+  }
+
+  for (var c = 0; c < casillas.length; c++) {
+    casillas[c].onchange = contar;
+  }
+</script>
+</body>
+</html>
